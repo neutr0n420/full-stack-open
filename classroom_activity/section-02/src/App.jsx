@@ -3,49 +3,43 @@ import Note from './components/Note'
 
 
 const App = (props) =>{
+  // Here we added a new notes and initalized with the notes array which is been defined at Main.jsx page.
     const [notes, setNotes] = useState(props.notes)
-    const [newNote, setNewNote] = useState('')
-    const [showAll, setShowAll] = useState(true)
-    const AddNote = (event) =>{
-      // if we do not do this step so every single time we update the info in our application and hit submit, the page get refreshed and all the changes that we are doing not gonna reflect in the application.
+   // Here we are creating a new note and initized with the empty string.
+    const [newNote , setNewNote] = useState("")
+    //We will call  this function when the form is getting submited.
+    const addNote = (event) =>{
+      // Here we are preventing the default things to happen such as refesh after the forms get submitted.
       event.preventDefault()
-      //how exactly this thing is working I want to figure it out.
+      //The target of the event stored in event.target is logged to the console.
+      // we want to access the element in it for now.
+      console.log("button clicked",event.target)
+      //creating a
       const noteObject = {
         content: newNote,
         important: Math.random() < 0.5,
-        id: notes.length + 1,
+        id: notes.length+1
       }
-    
       setNotes(notes.concat(noteObject))
     }
-
-    const HandleNoteChange = (event =>{
+    const handleNewNote = (event) =>{
       console.log(event.target.value)
       setNewNote(event.target.value)
-    })
+    }
 
-    const notesToShow = showAll
-    ? notes
-    : notes.filter(note => note.important === true)
     return(
         <div>
         <h1>Notes</h1>
         <div>
-          <button onClick={()=>setShowAll(!showAll)}>
-            show {showAll ? 'important':'all'}
-          </button>
         </div>
         <ul>
-        {notesToShow.map(note => 
+        {notes.map(note => 
           <Note key={note.id} note={note} />
         )}
         {/* On submit the form we are adding the new note here. This is calling the new funciton called as 'Addnote'. */}
-        <form onSubmit={AddNote}>
-          <input 
-          value={newNote}
-          onChange={HandleNoteChange}
-          />
-          <button type='submit'>save</button>
+        <form onSubmit={addNote}>
+          <input type="text" value={newNote} onChange={handleNewNote} />
+          <button >Submit</button>
         </form>
         </ul>
       </div>
