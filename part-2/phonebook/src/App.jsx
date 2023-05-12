@@ -3,25 +3,31 @@ import { v4 as uuidv4 } from 'uuid';
 
 const App = () =>{
   const [persons, setPersons] = useState([
-    {name: 'Arto Hellas', id: uuidv4()}
+    {name: 'Arto Hellas', id: uuidv4(), phoneNo: "+91-91919191"}
   ])
   const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
   const addName = (event) =>{
     event.preventDefault()
     const addNewPerson = {
       name: newName,
+      phoneNo: newNumber,
       id: uuidv4()
     }
     
     if(!isDuplicateElementPresent(persons, addNewPerson)){
      setPersons(persons.concat(addNewPerson))
+     console.log(addNewPerson)
    }
     
   } 
   const handleNameChange = (event) =>{
     // console.log(event.target.value)
     setNewName(event.target.value)
+  }
+  const handleNumberChange = (event) =>{
+    setNewNumber(event.target.value)
   }
 
 // console.log(`This is newname outside the function ${newName}`)
@@ -38,7 +44,7 @@ const isDuplicateElementPresent = (arr, obj) =>{
   }
   return false;
 }
-// console.log(persons[0].name)
+// console.log(persons[0].phone)
   return(
     <div>
       <h2>Phonebook</h2>
@@ -50,13 +56,19 @@ const isDuplicateElementPresent = (arr, obj) =>{
           />
         </div>
         <div>
+        phone: <input 
+          value={newNumber}
+          onChange={handleNumberChange}
+          />
+        </div>
+        <div>
           <button type="submit">add</button>
         </div>
       </form>
       <h2>Numbers</h2>
       <div>
         <ul>
-          {persons.map(person => <li key={uuidv4()}>{person.name} </li>)}
+          {persons.map(person => <li key={uuidv4()}>{person.name}  {person.phoneNo} </li>)}
         </ul>
       </div>
     </div>
