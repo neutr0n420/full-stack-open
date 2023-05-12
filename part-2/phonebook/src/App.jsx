@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const App = () =>{
   const [persons, setPersons] = useState([
-    {name: 'Arto Hellas'}
+    {name: 'Arto Hellas', id: uuidv4()}
   ])
   const [newName, setNewName] = useState('')
 
@@ -13,15 +13,32 @@ const App = () =>{
       name: newName,
       id: uuidv4()
     }
-
-    setPersons(persons.concat(addNewPerson))
     
+    if(!isDuplicateElementPresent(persons, addNewPerson)){
+     setPersons(persons.concat(addNewPerson))
+   }
     
   } 
   const handleNameChange = (event) =>{
-    console.log(event.target.value)
+    // console.log(event.target.value)
     setNewName(event.target.value)
   }
+
+// console.log(`This is newname outside the function ${newName}`)
+// for(let i =0; i< persons.length; i++){
+//   console.log(persons[i].name)
+// }
+
+const isDuplicateElementPresent = (arr, obj) =>{
+  for(let i =0; i< arr.length; i++){
+    if(arr[i].name.toLowerCase() === obj.name.toLowerCase()){
+      window.alert(`${obj.name} is already added to phonebook`)
+      return true;
+    }
+  }
+  return false;
+}
+// console.log(persons[0].name)
   return(
     <div>
       <h2>Phonebook</h2>
