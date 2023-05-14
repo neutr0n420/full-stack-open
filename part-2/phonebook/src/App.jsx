@@ -1,18 +1,24 @@
 import { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid';
+import Form from './components/Form';
+import DisplayContact from './components/DisplayContact';
 
 const App = () =>{
   const [persons, setPersons] = useState([
-    {name: 'Arto Hellas', id: uuidv4(), phoneNo: "+91-91919191"}
+    {name: 'Arto Hellas', number: "+91-91919191",id: uuidv4()},
+    { name: 'Ada Lovelace', number: '39-44-5323523', id: uuidv4() },
+    { name: 'Dan Abramov', number: '12-43-234345', id: uuidv4() },
+    { name: 'Mary Poppendieck', number: '39-23-6423122', id: uuidv4() }
   ])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [filteredName, setFilteredPersons] = useState([])
 
   const addName = (event) =>{
     event.preventDefault()
     const addNewPerson = {
       name: newName,
-      phoneNo: newNumber,
+      number: newNumber,
       id: uuidv4()
     }
     
@@ -44,32 +50,23 @@ const isDuplicateElementPresent = (arr, obj) =>{
   }
   return false;
 }
+
+const handleFilter = (event) =>{
+  const filtered = persons.filter(person => person.name.toLowerCase().includes(event.target.value.toLowerCase()));
+    setFilteredPersons(filtered);
+}
 // console.log(persons[0].phone)
   return(
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addName}>
-        <div>
-          name: <input 
-          value={newName}
-          onChange={handleNameChange}
-          />
-        </div>
-        <div>
-        phone: <input 
-          value={newNumber}
-          onChange={handleNumberChange}
-          />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      filter shown with<input onChange={handleFilter} />
+      <div>
+        <h2>add a new </h2>
+        <Form addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange}/>
       <h2>Numbers</h2>
       <div>
-        <ul>
-          {persons.map(person => <li key={uuidv4()}>{person.name}  {person.phoneNo} </li>)}
-        </ul>
+        <DisplayContact persons={persons}/>
+      </div>
       </div>
     </div>
   )
