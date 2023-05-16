@@ -20,6 +20,8 @@ const notes = [
   }
 ]
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <App notes={notes} />
+
+
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    <App notes={notes} />
 )
