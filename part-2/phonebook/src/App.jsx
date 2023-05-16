@@ -1,18 +1,23 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { v4 as uuidv4 } from 'uuid';
 import Form from './components/Form';
 import DisplayContact from './components/DisplayContact';
+import axios from 'axios';
+
 
 const App = () =>{
-  const [persons, setPersons] = useState([
-    {name: 'Arto Hellas', number: "+91-91919191",id: uuidv4()},
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: uuidv4() },
-    { name: 'Dan Abramov', number: '12-43-234345', id: uuidv4() },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: uuidv4() }
-  ])
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-  const [filteredName, setFilteredPersons] = useState([])
+  // const [filteredName, setFilteredPersons] = useState([])
+  
+  useEffect(() =>{
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response =>{
+        setPersons(response.data)
+      })
+  },[])
 
   const addName = (event) =>{
     event.preventDefault()
