@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import { v4 as uuidv4 } from 'uuid';
 import Form from './components/Form';
 import DisplayContact from './components/DisplayContact';
-import axios from 'axios';
+// import axios from 'axios';
+import contactService from './components/services/contact';
 
 
 const App = () =>{
@@ -12,8 +13,8 @@ const App = () =>{
   // const [input , setInput] =  useState('')
 
   useEffect(() =>{
-    axios
-      .get('http://localhost:3001/persons')
+    contactService
+      .getData()
       .then(response =>{
         setPersons(response.data)
       })
@@ -29,8 +30,8 @@ const App = () =>{
     }
     
     if(!isDuplicateElementPresent(persons, addNewPerson)){
-      axios
-        .post('http://localhost:3001/persons', addNewPerson)
+      contactService
+        .create(addNewPerson)
         .then(response =>{
           setPersons(persons.concat(response.data))
         })
