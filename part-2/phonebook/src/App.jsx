@@ -9,8 +9,8 @@ const App = () =>{
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-  // const [filteredName, setFilteredPersons] = useState([])
-  
+  // const [input , setInput] =  useState('')
+
   useEffect(() =>{
     axios
       .get('http://localhost:3001/persons')
@@ -19,6 +19,7 @@ const App = () =>{
       })
   },[])
 
+  // const [filteredName, setFilteredPersons] = useState(persons)
   const addName = (event) =>{
     event.preventDefault()
     const addNewPerson = {
@@ -28,8 +29,13 @@ const App = () =>{
     }
     
     if(!isDuplicateElementPresent(persons, addNewPerson)){
-     setPersons(persons.concat(addNewPerson))
-     console.log(addNewPerson)
+      axios
+        .post('http://localhost:3001/persons', addNewPerson)
+        .then(response =>{
+          setPersons(persons.concat(response.data))
+        })
+    //  setPersons(persons.concat(addNewPerson))
+    //  console.log(addNewPerson)
    }
     
   } 
@@ -56,21 +62,23 @@ const isDuplicateElementPresent = (arr, obj) =>{
   return false;
 }
 
-const handleFilter = (event) =>{
-  const filtered = persons.filter(person => person.name.toLowerCase().includes(event.target.value.toLowerCase()));
-    setFilteredPersons(filtered);
-}
-// console.log(persons[0].phone)
+// const handleFilter = (event) =>{
+// console.log(event.target.value)
+// setInput(event.target.value)
+// }
+  // console.log(persons)
+
+
   return(
     <div>
       <h2>Phonebook</h2>
-      filter shown with<input onChange={handleFilter} />
+      filter shown with<input  />
       <div>
         <h2>add a new </h2>
         <Form addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange}/>
       <h2>Numbers</h2>
       <div>
-        <DisplayContact persons={persons}/>
+         <DisplayContact persons={persons}/> 
       </div>
       </div>
     </div>
