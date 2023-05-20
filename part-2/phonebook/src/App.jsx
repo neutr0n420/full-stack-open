@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { v4 as uuidv4 } from 'uuid';
 import Form from './components/Form';
 import DisplayContact from './components/DisplayContact';
-// import axios from 'axios';
+import axios from 'axios';
 import contactService from './components/services/contact';
 
 
@@ -15,8 +15,8 @@ const App = () =>{
   useEffect(() =>{
     contactService
       .getData()
-      .then(response =>{
-        setPersons(response.data)
+      .then(contactDetails =>{
+        setPersons(contactDetails)
       })
   },[])
 
@@ -32,8 +32,8 @@ const App = () =>{
     if(!isDuplicateElementPresent(persons, addNewPerson)){
       contactService
         .create(addNewPerson)
-        .then(response =>{
-          setPersons(persons.concat(response.data))
+        .then(creatingContact =>{
+          setPersons(persons.concat(creatingContact))
         })
     //  setPersons(persons.concat(addNewPerson))
     //  console.log(addNewPerson)
@@ -69,6 +69,14 @@ const isDuplicateElementPresent = (arr, obj) =>{
 // }
   // console.log(persons)
 
+const removeContact = (id) =>{
+ window.confirm(`Delete ${persons.find(person => person.id === id).name}`)
+  axios
+    .delete(`http://localhost:3001/persons/${id}`)
+    .then(request => request.datà)
+   
+  console.log()
+}
 
   return(
     <div>
@@ -79,7 +87,15 @@ const isDuplicateElementPresent = (arr, obj) =>{
         <Form addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange}/>
       <h2>Numbers</h2>
       <div>
-         <DisplayContact persons={persons}/> 
+        {/* <DisplayContact persons={persons}/> */}
+        <ul>
+         { persons.map(person =>
+        <li key={uuidv4()}>
+          {person.name} {person.number}
+          <button onClick={() => removeContact(person.id)}>Delete</button>
+        </li>
+          )}
+        </ul>
       </div>
       </div>
     </div>
