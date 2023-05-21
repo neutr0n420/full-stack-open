@@ -16,30 +16,40 @@ const App = () =>{
     contactService
       .getData()
       .then(contactDetails =>{
+      
         setPersons(contactDetails)
+    
       })
   },[])
 
-  // const [filteredName, setFilteredPersons] = useState(persons)
+
   const addName = (event) =>{
     event.preventDefault()
     const addNewPerson = {
       name: newName,
-      number: newNumber,
-      id: uuidv4()
+      number: newNumber
     }
     
     if(!isDuplicateElementPresent(persons, addNewPerson)){
+      // console.log(addNewPerson)
+      if(newName !== '' || newNumber !== ''){
       contactService
         .create(addNewPerson)
         .then(creatingContact =>{
           setPersons(persons.concat(creatingContact))
         })
-    //  setPersons(persons.concat(addNewPerson))
-    //  console.log(addNewPerson)
+      }
+      
+      else{
+        window.alert("feild cannot be empty")
+        return
+      }
+   
    }
+ 
     
   } 
+  
   const handleNameChange = (event) =>{
     // console.log(event.target.value)
     setNewName(event.target.value)
@@ -48,19 +58,39 @@ const App = () =>{
     setNewNumber(event.target.value)
   }
 
-// console.log(`This is newname outside the function ${newName}`)
-// for(let i =0; i< persons.length; i++){
-//   console.log(persons[i].name)
-// }
 
 const isDuplicateElementPresent = (arr, obj) =>{
+  
   for(let i =0; i< arr.length; i++){
     if(arr[i].name.toLowerCase() === obj.name.toLowerCase()){
-      window.alert(`${obj.name} is already added to phonebook`)
-      return true;
+      if(arr[i].number !== obj.number){
+        if(!window.confirm(`Do you want to change the contact number for ${arr[i].name}`)){
+          return
+        }
+        updateNumber(arr[i].id, obj)
+        return true
+        // location.reload()
+      }
+      else{
+        window.alert(`${obj.name} is already added to phonebook`)
+        return true;
+      }
     }
+
   }
   return false;
+}
+
+
+
+  // console.log(persons)
+  const updateNumber = (id, object) =>{
+  console.log(`http://localhost:3001/persons/${id}`)
+  axios
+    .put(`http://localhost:3001/persons/${parseInt(id)}`, object)
+    .then(response => {
+      setPersons(persons.map(person => person.id === id ? response.data : person))
+    })
 }
 
 // const handleFilter = (event) =>{
@@ -70,13 +100,16 @@ const isDuplicateElementPresent = (arr, obj) =>{
   // console.log(persons)
 
 const removeContact = (id) =>{
- window.confirm(`Delete ${persons.find(person => person.id === id).name}`)
-  axios
+ if (!window.confirm(`Delete ${persons.find(person => person.id === id).name}`)) return
+ setPersons(persons.filter(person => person.id !== id ) )
+ axios
     .delete(`http://localhost:3001/persons/${id}`)
-    .then(request => request.datà)
-   
-  console.log()
+    .then(response => response.data) 
+//  location.reload()
 }
+
+
+
 
   return(
     <div>
@@ -90,7 +123,7 @@ const removeContact = (id) =>{
         {/* <DisplayContact persons={persons}/> */}
         <ul>
          { persons.map(person =>
-        <li key={uuidv4()}>
+        <li key={person.id}>
           {person.name} {person.number}
           <button onClick={() => removeContact(person.id)}>Delete</button>
         </li>
