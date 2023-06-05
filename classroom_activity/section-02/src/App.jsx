@@ -1,19 +1,40 @@
 import { useState, useEffect } from 'react'
 import Note from './components/Note'
+import Notification from './components/Notification'
 import noteService from './services/notes'
+import './index.css'
+
+
+const Footer = () =>{
+const footerStyle = {
+  color: "green",
+  fontStyle: "italic",
+  fontSize: 16 
+}
+  return(
+    <div style={footerStyle}>
+      <br />
+      <em>Note app , Department of Computer Science, University of Helsinki 2023</em>
+    </div>
+  )
+}
+
 
 const App = () =>{
   
     const [notes, setNotes] = useState([])
     const [newNote , setNewNote] = useState("")
-
+    const [errorMessage, setErrorMessage] = useState(null)
 
     useEffect(() =>{
       noteService
         .getAll()
-        .then(initlaValue =>{
-          setNotes(initlaValue)
+        // we are getting the only data that is req.
+        .then(responseData =>{
+          console.log(responseData)
+          setNotes(responseData)
         })
+
     }, []) 
 
     
@@ -50,12 +71,22 @@ const App = () =>{
         .then(retunedNote =>{
           setNotes(notes.map(note => note.id !== id? note : retunedNote))
         })
+        .catch(error =>{
+          setErrorMessage(
+            `Note ${note.content} was already removed from  the server'`
+          )
+          setTimeout(() =>{
+            setErrorMessage(null)
+          },5000)
+          
+        })
 
     }
-    console.log(noteService.getAll)
+    // console.log(noteService.getAll)
     return(
         <div>
         <h1>Notes</h1>
+        <Notification message={errorMessage}/>
         <div>
         </div>
         <ul>
@@ -71,6 +102,7 @@ const App = () =>{
           <button >Submit</button>
         </form>
         </ul>
+        <Footer/>
       </div>
     )
 }
