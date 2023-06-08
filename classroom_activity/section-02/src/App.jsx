@@ -14,7 +14,7 @@ const footerStyle = {
   return(
     <div style={footerStyle}>
       <br />
-      <em>Note app , Department of Computer Science, University of Helsinki 2023</em>
+      {/* <em>Note app , Department of Computer Science, University of Helsinki 2023</em> */}
     </div>
   )
 }
@@ -85,7 +85,7 @@ const App = () =>{
     // console.log(noteService.getAll)
     return(
         <div>
-        <h1>Notes</h1>
+        <h1>To-Do</h1>
         <Notification message={errorMessage}/>
         <div>
         </div>
