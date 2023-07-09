@@ -25,6 +25,17 @@ let contacts = [
     }
 ]
 
+const requestLogger = (request, response, next) =>{
+  console.log('Methods:', request.method)
+  console.log('Path: ', request.path)
+  console.log('Body: ',request.body)
+  contacts.log('---')
+  next()
+}
+
+const unknownEndpoint = (request, response) =>{
+  response.status(404).send({error: 'Unknown endpoint'})
+}
 
 app.get('/', (request, response)=>{
     response.send("<h1>Hello Welcome to the server</h1>")
@@ -89,6 +100,8 @@ app.post('/api/persons', (request, response)=>{
 
   
 })
+
+app.use(unknownEndpoint)
 
 const PORT = 3002
 app.listen(PORT, ()=>{
