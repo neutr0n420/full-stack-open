@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+
 app.use(express.json())
 let contacts = [
     { 
@@ -63,11 +64,30 @@ app.delete('/api/persons/:id', (request, response)=>{
   contacts = contacts.filter(note => note.id !== id)
   response.status(204).end()
 })
-
+const id = ()=>{
+  let randomNumber = Math.floor(Math.random()*1000000)
+  return randomNumber
+}
 app.post('/api/persons', (request, response)=>{
   const contact = request.body
-  console.log(contact)
-  response.json(contact)
+  if(!contact){
+    return response.status(204).end()
+  }
+  if(contact.name !== "" && contact.number!== ""){
+    return response.status(204).json({
+      error: "Name and number cannot be empty"
+    })
+  }
+  const contactNumber ={
+    id: id(),
+    name: contact.name,
+    number: contact.number
+  }
+  contact = contacts.concat(contactNumber)
+  console.log(contactNumber)
+  response.send(contactNumber)
+
+  
 })
 
 const PORT = 3002
