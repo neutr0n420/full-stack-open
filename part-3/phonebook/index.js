@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-
+app.use(express.json())
 let contacts = [
     { 
       "id": 1,
@@ -29,7 +29,7 @@ app.get('/', (request, response)=>{
     response.send("<h1>Hello Welcome to the server</h1>")
 })
 
-app.get('/api/contacts', (request, response)=>{
+app.get('/api/persons', (request, response)=>{
     response.send(contacts)
 })
 const dateTime = ()=>{
@@ -48,7 +48,7 @@ app.get('/info', (request, response)=>{
   `)
 })
 
-app.get('/api/contacts/:id', (request, response)=>{
+app.get('/api/persons/:id', (request, response)=>{
   const id = Number(request.params.id)
   const contact = contacts.find(contact => contact.id === id)
   if(contact){
@@ -56,11 +56,20 @@ app.get('/api/contacts/:id', (request, response)=>{
   }
   response.status(404).end()
 })
-app.delete('/api/contacts/:id', (request, response)=>{
+
+
+app.delete('/api/persons/:id', (request, response)=>{
   const id = Number(request.params.id)
   contacts = contacts.filter(note => note.id !== id)
   response.status(204).end()
 })
+
+app.post('/api/persons', (request, response)=>{
+  const contact = request.body
+  console.log(contact)
+  response.json(contact)
+})
+
 const PORT = 3002
 app.listen(PORT, ()=>{
     console.log(`App is running on port ${PORT}`)
