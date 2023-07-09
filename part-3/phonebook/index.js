@@ -48,6 +48,15 @@ app.get('/info', (request, response)=>{
   `)
 })
 
+app.get('/api/persons/:id', (request, response)=>{
+  const id = Number(request.params.id)
+  const contact = contacts.find(contact => contact.id === id)
+  if(contact){
+    response.send(contact)
+  }
+  response.status(404).end()
+})
+
 const PORT = 3002
 app.listen(PORT, ()=>{
     console.log(`App is running on port ${PORT}`)
