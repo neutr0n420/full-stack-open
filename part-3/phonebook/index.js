@@ -1,6 +1,7 @@
 const express = require('express')
+const morgan = require('morgan')
+const morgen = require('morgan')
 const app = express()
-
 app.use(express.json())
 let contacts = [
     { 
@@ -24,14 +25,26 @@ let contacts = [
       "number": "39-23-6423122"
     }
 ]
+// const requestLogger = (request, response, next) =>{
+//   console.log('Methods:', request.method)
+//   console.log('Path: ', request.path)
+//   console.log('Body: ',request.body)
+//   contacts.log('---')
+//   next()
+// }
+// const logger = morgen('tiny')
+// app.set(logger)
 
-const requestLogger = (request, response, next) =>{
-  console.log('Methods:', request.method)
-  console.log('Path: ', request.path)
-  console.log('Body: ',request.body)
-  contacts.log('---')
-  next()
-}
+app.use(morgan('tiny',(tokens, request, response)=>{
+  return[
+    tokens.method(request, response),
+    tokens.url(request, response),
+    tokens.status(request, response),
+    tokens.res(request, response, 'content-length', ), '-',
+    tokens['response-time'](req, res), 'ms'
+  ]
+}))
+
 
 const unknownEndpoint = (request, response) =>{
   response.status(404).send({error: 'Unknown endpoint'})
@@ -80,20 +93,23 @@ const id = ()=>{
   return randomNumber
 }
 app.post('/api/persons', (request, response)=>{
-  const contact = request.body
+  let contact = request.body
   if(!contact){
     return response.status(204).end()
   }
-  if(contact.name !== "" && contact.number!== ""){
+  console.log(contact.name)
+  console.log(contact.number)
+  if(contact.name == "" || contact.number== ""){
     return response.status(204).json({
       error: "Name and number cannot be empty"
     })
   }
-  const contactNumber ={
+  let contactNumber ={
     id: id(),
     name: contact.name,
     number: contact.number
   }
+  console.log(contactNumber)
   contact = contacts.concat(contactNumber)
   console.log(contactNumber)
   response.send(contactNumber)
