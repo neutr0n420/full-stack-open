@@ -35,15 +35,21 @@ let contacts = [
 // const logger = morgen('tiny')
 // app.set(logger)
 
-app.use(morgan('tiny',(tokens, request, response)=>{
-  return[
-    tokens.method(request, response),
-    tokens.url(request, response),
-    tokens.status(request, response),
-    tokens.res(request, response, 'content-length', ), '-',
-    tokens['response-time'](req, res), 'ms'
-  ]
-}))
+// app.use(morgan('tiny',(tokens, request, response)=>{
+//   console.log(request.data)
+//   return[
+//     tokens.method(request, response),
+//     tokens.url(request, response),
+//     tokens.status(request, response),
+//     tokens.res(request, response, 'content-length',response ), '-',
+//     tokens['response-time'](req, res), 'ms',
+//     tokens.body(JSON.stringify(response.data))
+    
+//   ]
+// }))
+// Here making a new token named 'data' and using that token to log out the actual data.
+morgan.token('data', function(request, response){return JSON.stringify(response.data)})
+app.use(morgan(':method :url :status :response-time ms - :res[content-length] data'))
 
 
 const unknownEndpoint = (request, response) =>{
@@ -97,8 +103,6 @@ app.post('/api/persons', (request, response)=>{
   if(!contact){
     return response.status(204).end()
   }
-  console.log(contact.name)
-  console.log(contact.number)
   if(contact.name == "" || contact.number== ""){
     return response.status(204).json({
       error: "Name and number cannot be empty"
@@ -109,7 +113,7 @@ app.post('/api/persons', (request, response)=>{
     name: contact.name,
     number: contact.number
   }
-  console.log(contactNumber)
+  // console.log(contactNumber)
   contact = contacts.concat(contactNumber)
   console.log(contactNumber)
   response.send(contactNumber)
