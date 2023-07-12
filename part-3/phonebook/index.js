@@ -25,6 +25,9 @@ let contacts = [
       "number": "39-23-6423122"
     }
 ]
+
+//This is the simple logger using the express.  
+
 // const requestLogger = (request, response, next) =>{
 //   console.log('Methods:', request.method)
 //   console.log('Path: ', request.path)
@@ -35,18 +38,7 @@ let contacts = [
 // const logger = morgen('tiny')
 // app.set(logger)
 
-// app.use(morgan('tiny',(tokens, request, response)=>{
-//   console.log(request.data)
-//   return[
-//     tokens.method(request, response),
-//     tokens.url(request, response),
-//     tokens.status(request, response),
-//     tokens.res(request, response, 'content-length',response ), '-',
-//     tokens['response-time'](req, res), 'ms',
-//     tokens.body(JSON.stringify(response.data))
-    
-//   ]
-// }))
+
 // Here making a new token named 'data' and using that token to log out the actual data.
 morgan.token('data', function(request, response){return JSON.stringify(response.data)})
 app.use(morgan(':method :url :status :response-time ms - :res[content-length] data'))
