@@ -38,6 +38,7 @@ let contacts = [
 // const logger = morgen('tiny')
 // app.set(logger)
 
+app.use(express.static("dist"))
 app.use(cors())
 
 // Here making a new token named 'data' and using that token to log out the actual data.
