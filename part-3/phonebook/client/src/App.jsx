@@ -97,9 +97,9 @@ const isDuplicateElementPresent = (arr, obj) =>{
 
   // console.log(persons)
   const updateNumber = (id, object) =>{
-  console.log(`http://localhost:3001/persons/${id}`)
+  console.log(`http://localhost:3002/api/persons/${id}`)
   axios
-    .put(`http://localhost:3001/persons/${parseInt(id)}`, object)
+    .put(`http://localhost:3002/api/persons/${parseInt(id)}`, object)
     .then(response => {
       setPersons(persons.map(person => person.id === id ? response.data : person))
     })
@@ -123,7 +123,7 @@ const removeContact = (id) =>{
  if (!window.confirm(`Delete ${persons.find(person => person.id === id).name}`)) return
  setPersons(persons.filter(person => person.id !== id ) )
  axios
-    .delete(`http://localhost:3001/persons/${id}`)
+    .delete(`http://localhost:3002/api/persons/${id}`)
     .then(response => response.data) 
 //  location.reload()
 }

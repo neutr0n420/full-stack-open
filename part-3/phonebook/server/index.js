@@ -1,6 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
-const morgen = require('morgan')
+const cors = require('cors')
 const app = express()
 app.use(express.json())
 let contacts = [
@@ -38,10 +38,12 @@ let contacts = [
 // const logger = morgen('tiny')
 // app.set(logger)
 
+app.use(cors())
 
 // Here making a new token named 'data' and using that token to log out the actual data.
 morgan.token('data', function(request, response){return JSON.stringify(response.data)})
 app.use(morgan(':method :url :status :response-time ms - :res[content-length] data'))
+
 
 
 const unknownEndpoint = (request, response) =>{
