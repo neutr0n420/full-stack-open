@@ -28,22 +28,26 @@ mongoose.connect(uri, {
     name: personName,
     number: personNumber,
   });
- 
-  phoneNumber.save().then((result) => {
-    console.log("The contact had been saved")
-    // mongoose.connection.close();
-    
-  });
+  if(process.argv === 5){
+
+    phoneNumber.save().then((result) => {
+      console.log("The contact had been saved")
+      // mongoose.connection.close();
+    });
+    mongoose.connection.close()
+  }
 if(process.argv === 3){
 
-}
   Phonebook.find({}).then(result =>{
     result.forEach((phonebook)=>{
       console.log(phonebook.name)
       console.log(phonebook.number)
-    })  
+
+    })
+    mongoose.connection.close()  
 
   })
+}
 }).catch((error) => {
   console.log('Failed to connect to MongoDB:', error.message);
 });
